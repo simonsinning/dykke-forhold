@@ -14,8 +14,10 @@ class OpenMeteoProvider:
     """Fetches weather and marine forecasts without requiring an API key."""
 
     WEATHER_URL = "https://api.open-meteo.com/v1/forecast"
+    DMI_WEATHER_URL = "https://api.open-meteo.com/v1/dmi"
     MARINE_URL = "https://marine-api.open-meteo.com/v1/marine"
     CACHE_SECONDS = 600
+    PARTIAL_CACHE_SECONDS = 60
 
     def __init__(self):
         self._cache: dict[tuple[float, float], tuple[datetime, ForecastBundle]] = {}
@@ -23,26 +25,14 @@ class OpenMeteoProvider:
     def fetch(self, latitude: float, longitude: float) -> ForecastBundle:
         cache_key = (round(latitude, 4), round(longitude, 4))
         cached = self._cache.get(cache_key)
-        if cached and datetime.now() - cached[0] < timedelta(seconds=self.CACHE_SECONDS):
-            return cached[1]
+        if cached:
+            cache_seconds = self.CACHE_SECONDS if self._has_weather(cached[1]) else self.PARTIAL_CACHE_SECONDS
+            if datetime.now() - cached[0] < timedelta(seconds=cache_seconds):
+                return cached[1]
 
         warnings: list[str] = []
-        try:
-            weather = self._fetch_json(
-                self.WEATHER_URL,
-                {
-                    "latitude": latitude,
-                    "longitude": longitude,
-                    "hourly": "wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation",
-                    "past_days": 3,
-                    "forecast_days": 3,
-                    "timezone": "Europe/Copenhagen",
-                    "wind_speed_unit": "ms",
-                },
-            )
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
-            warnings.append(f"Kunne ikke hente vejrdata: {exc}")
-            weather = {}
+        weather, weather_warnings = self._fetch_weather(latitude, longitude)
+        warnings.extend(weather_warnings)
 
         try:
             marine = self._fetch_json(
@@ -73,6 +63,39 @@ class OpenMeteoProvider:
         forecast = ForecastBundle(points=points, source=source, warnings=warnings)
         self._cache[cache_key] = (datetime.now(), forecast)
         return forecast
+
+    def _fetch_weather(self, latitude: float, longitude: float) -> tuple[dict, list[str]]:
+        params = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "hourly": "wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation",
+            "past_days": 3,
+            "forecast_days": 3,
+            "timezone": "Europe/Copenhagen",
+            "wind_speed_unit": "ms",
+        }
+        attempts = [
+            ("Open-Meteo", self.WEATHER_URL),
+            ("Open-Meteo DMI", self.DMI_WEATHER_URL),
+        ]
+        errors = []
+
+        for label, url in attempts:
+            try:
+                data = self._fetch_json(url, params)
+            except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+                errors.append(f"{label}: {exc}")
+                continue
+
+            hourly = data.get("hourly", {})
+            if self._has_hourly_values(hourly, "wind_speed_10m"):
+                if label == "Open-Meteo DMI":
+                    return data, ["Bruger DMI-vejrdata, fordi standard vejrdata manglede vind."]
+                return data, []
+
+            errors.append(f"{label}: svaret indeholdt ingen vinddata")
+
+        return {}, [f"Kunne ikke hente vejrdata: {'; '.join(errors)}"]
 
     def _fetch_json(self, base_url: str, params: dict[str, object]) -> dict:
         url = f"{base_url}?{urlencode(params)}"
@@ -114,6 +137,12 @@ class OpenMeteoProvider:
         if index >= len(values):
             return None
         return values[index]
+
+    def _has_hourly_values(self, hourly: dict, key: str) -> bool:
+        return any(value is not None for value in hourly.get(key, []))
+
+    def _has_weather(self, forecast: ForecastBundle) -> bool:
+        return any(point.wind_speed is not None for point in forecast.points)
 
     def _kmh_to_ms(self, value: float | None) -> float | None:
         if value is None:
