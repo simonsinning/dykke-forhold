@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dykke forhold</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>Dykke forhold</h1>
+        <p id="subtitle">Sigtbarhedsvurdering for danske kystspots</p>
+      </div>
+      <div class="controls">
+        <label for="spotSelect">Spot</label>
+        <select id="spotSelect"></select>
+        <button id="refreshButton" type="button">Opdater</button>
+      </div>
+    </header>
+
+    <main>
+      <nav class="tabs" aria-label="Visning">
+        <button class="tabButton isActive" type="button" data-tab="spot">Spot</button>
+        <button class="tabButton" type="button" data-tab="ranking">Rangliste</button>
+        <button class="tabButton" type="button" data-tab="map">Kort</button>
+        <button class="tabButton" type="button" data-tab="info">Info</button>
+      </nav>
+
+      <section class="tabView isActive" id="spotView">
+        <section class="status">
+          <div>
+            <span class="eyebrow">Bedste vindue</span>
+            <h2 id="bestGrade">Indlæser...</h2>
+            <p id="bestText"></p>
+            <div class="statusActions">
+              <button id="spotInfoButton" class="secondaryButton" type="button">Spotinfo</button>
+              <span id="confidenceText"></span>
+            </div>
+          </div>
+          <div class="scoreDial" aria-live="polite">
+            <span id="bestScore">--</span>
+            <small>/100</small>
+          </div>
+        </section>
+
+        <section class="grid" id="ratings"></section>
+
+        <section class="panel chartPanel">
+          <div class="panelHeader">
+            <h2>Udvikling</h2>
+            <span>Sidste 3 dage og kommende 3 dage</span>
+          </div>
+          <div class="windCompass" id="windCompass"></div>
+          <div class="chartGrid" id="charts"></div>
+        </section>
+
+        <section class="split">
+          <div class="panel">
+            <div class="panelHeader">
+              <h2>Hvorfor?</h2>
+              <span id="source"></span>
+            </div>
+            <ul id="reasons"></ul>
+            <div id="modelBreakdown" class="breakdownGrid"></div>
+            <div id="warnings" class="warnings"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHeader">
+              <h2>Log faktisk sigt</h2>
+            </div>
+            <form id="observationForm">
+              <label>
+                Sigtbarhed i meter
+                <input id="visibilityInput" name="visibility_m" type="number" min="0" max="30" step="0.1" required>
+              </label>
+              <label>
+                Overflade
+                <select id="surfaceInput" name="surface">
+                  <option value="roligt">Roligt</option>
+                  <option value="let krusning">Let krusning</option>
+                  <option value="uroligt">Uroligt</option>
+                  <option value="brænding">Brænding</option>
+                </select>
+              </label>
+              <label class="checkbox">
+                <input id="diveableInput" name="diveable" type="checkbox" checked>
+                Dykbart
+              </label>
+              <label>
+                Note
+                <textarea id="notesInput" name="notes" rows="3" placeholder="Fx mælket ved bunden, brun kant ved havnen..."></textarea>
+              </label>
+              <button type="submit">Gem observation</button>
+              <p id="formMessage" class="formMessage"></p>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panelHeader">
+            <h2>Seneste observationer</h2>
+            <span>Din lokale hukommelse</span>
+          </div>
+          <div id="observations" class="observations"></div>
+        </section>
+      </section>
+
+      <section class="tabView" id="rankingView">
+        <section class="panel rankingPanel">
+          <div class="panelHeader">
+            <h2>Rangliste</h2>
+            <span id="rankingStatus">Alle spots</span>
+          </div>
+          <div class="rankingGrid" id="rankings"></div>
+        </section>
+      </section>
+
+      <section class="tabView" id="mapView">
+        <section class="panel mapPanel">
+          <div class="panelHeader">
+            <h2>Kort</h2>
+            <span id="mapStatus">Alle spots</span>
+          </div>
+          <div class="mapToolbar" id="mapDayControls"></div>
+          <div class="mapShell">
+            <div class="denmarkMap" id="denmarkMap" aria-label="Kort over dykkeforhold i Danmark">
+              <div class="mapCanvas" id="mapCanvas">
+                <img class="mapImage" src="/assets/denmark-map.png" alt="">
+                <div class="mapHeatLayer" id="mapHeatLayer"></div>
+                <div class="mapMarkerLayer" id="mapMarkerLayer"></div>
+              </div>
+              <div class="mapZoomControls" aria-label="Kort zoom">
+                <button type="button" data-map-zoom="in" aria-label="Zoom ind">+</button>
+                <button type="button" data-map-zoom="out" aria-label="Zoom ud">-</button>
+                <button type="button" data-map-zoom="reset" aria-label="Nulstil zoom">1x</button>
+              </div>
+              <a class="mapAttribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">&copy; OpenStreetMap contributors</a>
+            </div>
+            <aside class="mapLegend">
+              <h3>Score</h3>
+              <div><i style="background:#2f9e44"></i><span>80-100</span></div>
+              <div><i style="background:#82c91e"></i><span>62-79</span></div>
+              <div><i style="background:#f08c00"></i><span>42-61</span></div>
+              <div><i style="background:#e8590c"></i><span>25-41</span></div>
+              <div><i style="background:#c92a2a"></i><span>0-24</span></div>
+            </aside>
+          </div>
+        </section>
+      </section>
+
+      <section class="tabView" id="infoView">
+        <section class="infoHero">
+          <span class="eyebrow">Om modellen</span>
+          <h2>Dykke forhold vurderer sandsynlig sigt, ikke sikkerhedsgaranti</h2>
+          <p>
+            Appen samler vejr- og havprognoser, lokale spot-profiler og dine egne observationer for at give et kvalificeret bud på, hvor sigten sandsynligvis er bedst.
+            Den er lavet som beslutningsstøtte til kystdykning og undervandsjagt, men den erstatter ikke lokal vurdering, sikkerhedsprocedurer eller sund fornuft ved vandet.
+          </p>
+        </section>
+
+        <section class="infoLayout">
+          <article class="panel infoPanel">
+            <h2>Hvad kan hjemmesiden?</h2>
+            <ul class="infoList">
+              <li>Vurderer hvert spot på en score fra 0 til 100 for fire tidsvinduer: nu, i aften, i morgen og om to dage.</li>
+              <li>Estimerer et sigt-interval i meter ud fra score, sæson og spottets lokale normalniveau.</li>
+              <li>Viser hvorfor scoren bliver som den bliver, inklusive bølger, sediment, regn, alger, strøm og recovery-tid.</li>
+              <li>Rangerer alle spots og viser dem på Danmarkskort med heatmap-markører.</li>
+              <li>Giver spotinfo for hvert sted, så du kan se lokale forhold som bundtype, fetch, udløb, særlige vindsektorer og krævet ro.</li>
+              <li>Lader dig logge faktisk sigtbarhed, så der senere kan bygges bedre kalibrering på lokale observationer.</li>
+            </ul>
+          </article>
+
+          <article class="panel infoPanel">
+            <h2>Parametre modellen bruger</h2>
+            <div class="infoCards">
+              <div><strong>Vindhistorik</strong><span>De sidste 72 timer vægtes, fordi tidligere uro stadig kan holde sediment i vandet.</span></div>
+              <div><strong>Vindstyrke</strong><span>Styrken vægtes kraftigt, især når den kombineres med eksponeret retning og lang fetch.</span></div>
+              <div><strong>Bølger</strong><span>Bølgehøjde og bølgeperiode bruges som direkte tegn på bundpåvirkning.</span></div>
+              <div><strong>Bundtype</strong><span>Mudder, silt og fint sand får høj risiko; sten, grus og rev får lavere risiko.</span></div>
+              <div><strong>Vanddybde</strong><span>Lavt vand gør bølger farligere for sigten, fordi energien lettere når bunden.</span></div>
+              <div><strong>Regn/runoff</strong><span>Regn de seneste 24 og 72 timer vægtes højere nær åer, dræn, havne og fjorde.</span></div>
+              <div><strong>Alger/sæson</strong><span>Sommer og varmt vand giver højere baggrundsrisiko for alger og grønt/brunt vand.</span></div>
+              <div><strong>Strøm</strong><span>Strøm kan være plus eller minus afhængigt af om den bringer klart eller uklart vand ind.</span></div>
+              <div><strong>Recovery</strong><span>Hvert spot har et krav til rolige timer før partikler forventes at bundfælde.</span></div>
+            </div>
+          </article>
+
+          <article class="panel infoPanel">
+            <h2>Hvor kommer data fra?</h2>
+            <div class="sourceGrid">
+              <div>
+                <strong>Live vejr</strong>
+                <span>Open-Meteo vejrprognose: vindhastighed, vindretning, vindstød og nedbør.</span>
+              </div>
+              <div>
+                <strong>Live havdata</strong>
+                <span>Open-Meteo marine API: bølgehøjde, bølgeretning, bølgeperiode, strøm og havtemperatur.</span>
+              </div>
+              <div>
+                <strong>Lokale spot-profiler</strong>
+                <span>Projektets egne `spots.json`-profiler: bund, fetch, særlige sektorer, følsomheder og lokale noter.</span>
+              </div>
+              <div>
+                <strong>Fagligt grundlag</strong>
+                <span>Vidensopsamlingen i dokumentet om sigtbarhed i danske farvande samt praktiske dykkerregler.</span>
+              </div>
+            </div>
+            <p class="infoNote">
+              De vigtigste faglige inspirationskilder er Dansk Sportsdykker Forbund om sigt, alger og springlag; GEUS om havbundssedimenter; Kystdirektoratet om kystdynamik;
+              HELCOM om Secchi-målinger; studier om Limfjorden, turbiditet og sedimentresuspension; samt kilder om trawling, skibstrafik, dredging og AIS-data.
+            </p>
+          </article>
+
+          <article class="panel infoPanel">
+            <h2>Sådan skal scoren læses</h2>
+            <div class="scoreGuide">
+              <div><strong>80-100</strong><span>Super: gode tegn, men stadig lokal vurdering påkrævet.</span></div>
+              <div><strong>62-79</strong><span>Godt: sandsynligvis brugbart, især på robuste spots.</span></div>
+              <div><strong>42-61</strong><span>Måske: blandede signaler eller høj lokal usikkerhed.</span></div>
+              <div><strong>25-41</strong><span>Dårligt: flere negative faktorer peger mod dårlig sigt.</span></div>
+              <div><strong>0-24</strong><span>Drop det: modellen ser markant risiko for meget dårlig sigt.</span></div>
+            </div>
+          </article>
+
+          <article class="panel infoPanel">
+            <h2>Usikkerheder</h2>
+            <ul class="infoList">
+              <li>Marine prognoser kan ramme forkert tæt på kyst, moler, havne, åudløb og små bugter.</li>
+              <li>Modellen kender ikke altid lokale algeopblomstringer, havnearbejde, trawling, skibstrafik eller pludselige plumer.</li>
+              <li>Strømdata er ofte grove. Overfladestrøm og bundstrøm kan pege forskelligt, især i lagdelte farvande.</li>
+              <li>Sigt er ikke kun partikler: lys, solhøjde, skyer, skum, springlag og brunt CDOM-vand ændrer den oplevede sigt.</li>
+              <li>Spot-profilerne er kvalificerede skøn. De bør justeres efter dine faktiske observationer.</li>
+              <li>En høj score betyder ikke at forholdene er sikre. Strøm, bølger, trafik, adgangsforhold og egen erfaring skal vurderes separat.</li>
+            </ul>
+          </article>
+
+          <article class="panel infoPanel">
+            <h2>Forbehold</h2>
+            <p>
+              Appen vurderer sandsynlig sigtbarhed, ikke om et dyk er forsvarligt. Brug altid lokale observationer, vejrmeldinger, bølgeforhold, makkerprocedure,
+              overfladeberedskab og egen erfaring. Ved tvivl bør scoren tolkes konservativt.
+            </p>
+            <p>
+              Den bedste måde at gøre modellen bedre på er at logge faktisk sigt efter ture. Over tid kan observationerne bruges til at kalibrere hvert spot mere præcist.
+            </p>
+          </article>
+
+          <article class="panel infoPanel sourcePanel">
+            <h2>Kilder og videre data</h2>
+            <div class="sourceLinks">
+              <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>
+              <a href="https://marine-api.open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo Marine</a>
+              <a href="https://eng.geus.dk/mineral-resources/danish-raw-materials/seabed-sediment-map" target="_blank" rel="noreferrer">GEUS havbundssedimentkort</a>
+              <a href="https://kyst.dk/klimatilpasning/kystdynamik" target="_blank" rel="noreferrer">Kystdirektoratet om kystdynamik</a>
+              <a href="https://helcom.fi/wp-content/uploads/2019/08/Guidelines-for-measuring-Secchi-depth.pdf" target="_blank" rel="noreferrer">HELCOM Secchi-guidelines</a>
+              <a href="https://ocean.dmi.dk/models/index.uk.php" target="_blank" rel="noreferrer">DMI Ocean models</a>
+              <a href="https://ono.dtuaqua.dk/DDFAM/" target="_blank" rel="noreferrer">DTU Aqua havbundsaftryk</a>
+              <a href="https://www.dma.dk/safety-at-sea/navigational-information/ais-data" target="_blank" rel="noreferrer">Danish Maritime Authority AIS</a>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <footer class="contactBar">
+      <span>Spørgsmål, forslag eller lokale observationer?</span>
+      <a href="mailto:simonsinning@hotmail.com">simonsinning@hotmail.com</a>
+    </footer>
+
+    <dialog id="spotInfoDialog" class="spotDialog">
+      <div class="dialogHeader">
+        <div>
+          <span class="eyebrow">Lokal modelprofil</span>
+          <h2 id="spotInfoTitle">Spotinfo</h2>
+        </div>
+        <button id="spotInfoClose" class="iconButton" type="button" aria-label="Luk">×</button>
+      </div>
+      <div id="spotInfoContent" class="spotInfoContent"></div>
+    </dialog>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

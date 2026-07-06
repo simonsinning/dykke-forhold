@@ -1,0 +1,580 @@
+[
+  {
+    "id": "glatved",
+    "name": "Glatved",
+    "area": "Djursland / Kattegat",
+    "latitude": 56.319,
+    "longitude": 10.842,
+    "bad_wind_directions": [45, 75, 105, 135],
+    "good_wind_directions": [225, 255, 285, 315],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 5.0,
+    "bottom_stability_bonus": 4.0,
+    "sensitivity": {"wind": 0.95, "waves": 1.0, "rain": 0.75, "current": 0.9},
+    "visibility_model": {
+      "base_score": 84,
+      "spot_type": "Åben stenet Kattegat-kyst",
+      "bottom_type": "Sten, grus og tangbælter",
+      "depth_profile": "3-10 m tæt på land, relativt robust bund",
+      "sediment_risk": 0.45,
+      "shallow_factor": 0.75,
+      "runoff_sensitivity": 0.45,
+      "algae_sensitivity": 0.85,
+      "current_sensitivity": 0.75,
+      "water_exchange": 1.15,
+      "required_calm_hours": 18,
+      "calm_wind_ms": 5.2,
+      "calm_wave_m": 0.45,
+      "baseline_visibility_m": {"winter": 6.0, "spring": 5.0, "summer": 3.5, "autumn": 4.5},
+      "fetch_sectors": [
+        {"label": "Åben østlig sø fra Kattegat", "directions": [45, 75, 105, 135], "factor": 1.25},
+        {"label": "Læ og fralandsvind fra vest", "directions": [225, 255, 285, 315], "factor": 0.45}
+      ],
+      "clear_water_directions": [225, 255, 285, 315],
+      "dirty_water_directions": [45, 75, 105, 135],
+      "special_factors": [
+        "Stenet bund tåler mere uro end sand- og fjordspots.",
+        "Østlige vinde kan stadig bygge sø direkte ind på kysten.",
+        "God vandudskiftning gør recovery hurtigere efter blæsevejr."
+      ]
+    },
+    "notes": "Stenet kyst med god vandudskiftning. Østlige vinde kan give bølger og ophvirvling."
+  },
+  {
+    "id": "boeslum",
+    "name": "Boeslum",
+    "area": "Ebeltoft / Kattegat",
+    "latitude": 56.183,
+    "longitude": 10.735,
+    "bad_wind_directions": [45, 75, 105, 135],
+    "good_wind_directions": [225, 255, 285, 315],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 4.0,
+    "bottom_stability_bonus": 1.5,
+    "sensitivity": {"wind": 1.05, "waves": 1.05, "rain": 0.85, "current": 0.8},
+    "visibility_model": {
+      "base_score": 77,
+      "spot_type": "Østvendt sand- og stenstrand",
+      "bottom_type": "Sand med stenpartier",
+      "depth_profile": "Lav til moderat dybde; bølger kan nå bunden",
+      "sediment_risk": 0.95,
+      "shallow_factor": 1.05,
+      "runoff_sensitivity": 0.65,
+      "algae_sensitivity": 0.95,
+      "current_sensitivity": 0.75,
+      "water_exchange": 1.0,
+      "required_calm_hours": 36,
+      "calm_wind_ms": 4.6,
+      "calm_wave_m": 0.35,
+      "baseline_visibility_m": {"winter": 5.0, "spring": 4.0, "summer": 2.6, "autumn": 3.5},
+      "fetch_sectors": [
+        {"label": "Eksponeret mod øst og nordøst", "directions": [45, 75, 105, 135], "factor": 1.35},
+        {"label": "Roligere ved vestlige vinde", "directions": [225, 255, 285, 315], "factor": 0.5}
+      ],
+      "clear_water_directions": [225, 255, 285, 315],
+      "dirty_water_directions": [45, 75, 105, 135],
+      "special_factors": [
+        "Sandpartier gør spottet mere følsomt end de rene stenrev.",
+        "Kræver typisk et døgn eller mere med rolig sø efter østenvind.",
+        "Sommeralger kan begrænse sigten selv ved pænt vejr."
+      ]
+    },
+    "notes": "Østvendt sand- og stenstrand. Bedst efter rolige vestlige vinde."
+  },
+  {
+    "id": "jernhatten",
+    "name": "Jernhatten",
+    "area": "Djursland / Kattegat",
+    "latitude": 56.259,
+    "longitude": 10.814,
+    "bad_wind_directions": [45, 75, 105, 135],
+    "good_wind_directions": [225, 255, 285, 315],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 5.0,
+    "bottom_stability_bonus": 4.0,
+    "sensitivity": {"wind": 0.9, "waves": 0.95, "rain": 0.75, "current": 0.9},
+    "visibility_model": {
+      "base_score": 86,
+      "spot_type": "Stenet rev og tangskov",
+      "bottom_type": "Sten, rev og vegetation",
+      "depth_profile": "Relativt robust bund med lokal læ mellem sten og tang",
+      "sediment_risk": 0.35,
+      "shallow_factor": 0.7,
+      "runoff_sensitivity": 0.4,
+      "algae_sensitivity": 0.8,
+      "current_sensitivity": 0.8,
+      "water_exchange": 1.2,
+      "required_calm_hours": 16,
+      "calm_wind_ms": 5.4,
+      "calm_wave_m": 0.5,
+      "baseline_visibility_m": {"winter": 6.5, "spring": 5.2, "summer": 3.8, "autumn": 4.8},
+      "fetch_sectors": [
+        {"label": "Kattegat-sø fra øst", "directions": [45, 75, 105, 135], "factor": 1.15},
+        {"label": "Læ ved vestlig vind", "directions": [225, 255, 285, 315], "factor": 0.4}
+      ],
+      "clear_water_directions": [225, 255, 285, 315],
+      "dirty_water_directions": [45, 75, 105, 135],
+      "special_factors": [
+        "Stabil sten- og tangbund giver hurtig bundfældning.",
+        "Åbent mod Kattegat, så bølgehøjden er vigtigere end retningen alene.",
+        "Ofte et af de spots hvor moderat fralandsvind stadig kan være fint."
+      ]
+    },
+    "notes": "Stenet rev og tangskov. Åbent mod Kattegat, men ofte robust bund."
+  },
+  {
+    "id": "grenaa-nordmole",
+    "name": "Grenå Nordmole",
+    "area": "Grenå Havn",
+    "latitude": 56.407,
+    "longitude": 10.927,
+    "bad_wind_directions": [30, 60, 90, 120],
+    "good_wind_directions": [210, 240, 270, 300],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 3.5,
+    "bottom_stability_bonus": 1.5,
+    "sensitivity": {"wind": 1.05, "waves": 0.95, "rain": 1.0, "current": 0.9},
+    "visibility_model": {
+      "base_score": 72,
+      "spot_type": "Havnemole med lokal opsamling",
+      "bottom_type": "Sten/molefod med sand og havnesediment i nærheden",
+      "depth_profile": "Mole- og havneområde med lokale læzoner og trafik",
+      "sediment_risk": 0.85,
+      "shallow_factor": 0.95,
+      "runoff_sensitivity": 1.05,
+      "algae_sensitivity": 0.9,
+      "current_sensitivity": 1.05,
+      "water_exchange": 0.85,
+      "required_calm_hours": 42,
+      "calm_wind_ms": 4.4,
+      "calm_wave_m": 0.35,
+      "baseline_visibility_m": {"winter": 4.2, "spring": 3.5, "summer": 2.4, "autumn": 3.0},
+      "fetch_sectors": [
+        {"label": "Østlig sø direkte mod havnen", "directions": [30, 60, 90, 120], "factor": 1.3},
+        {"label": "Vestlig læ", "directions": [210, 240, 270, 300], "factor": 0.55},
+        {"label": "Sydgående drift kan samles ved molen", "directions": [150, 180, 210], "factor": 1.2}
+      ],
+      "clear_water_directions": [240, 270, 300],
+      "dirty_water_directions": [30, 60, 90, 120, 150, 180],
+      "local_penalty_sectors": [
+        {"label": "Molen kan fange sydgående grums", "directions": [150, 180, 210], "factor": 1.4}
+      ],
+      "special_factors": [
+        "Sydgående vind/drift vægtes negativt, fordi molen kan samle materiale.",
+        "Havneaktivitet, udløb og propeller kan give lokal uklarhed.",
+        "Fralandsvind er ikke altid nok, hvis vandet transporteres ind langs molen."
+      ]
+    },
+    "notes": "Havnespot med læmuligheder, men havn, strøm og skibstrafik skal vurderes lokalt."
+  },
+  {
+    "id": "grenaa-sydmole",
+    "name": "Grenå Sydmole",
+    "area": "Grenå Havn",
+    "latitude": 56.402,
+    "longitude": 10.928,
+    "bad_wind_directions": [45, 75, 105, 135],
+    "good_wind_directions": [225, 255, 285, 315],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 3.5,
+    "bottom_stability_bonus": 1.0,
+    "sensitivity": {"wind": 1.05, "waves": 1.0, "rain": 1.0, "current": 0.9},
+    "visibility_model": {
+      "base_score": 71,
+      "spot_type": "Eksponeret havnemole",
+      "bottom_type": "Sten/molefod med sand og havnesediment",
+      "depth_profile": "Moleområde påvirket af bølger, havn og lokal strøm",
+      "sediment_risk": 0.9,
+      "shallow_factor": 1.0,
+      "runoff_sensitivity": 1.0,
+      "algae_sensitivity": 0.9,
+      "current_sensitivity": 1.0,
+      "water_exchange": 0.9,
+      "required_calm_hours": 42,
+      "calm_wind_ms": 4.4,
+      "calm_wave_m": 0.35,
+      "baseline_visibility_m": {"winter": 4.0, "spring": 3.4, "summer": 2.3, "autumn": 3.0},
+      "fetch_sectors": [
+        {"label": "Østlig eksponering mod Kattegat", "directions": [45, 75, 105, 135], "factor": 1.35},
+        {"label": "Vestlige vinde giver typisk læ", "directions": [225, 255, 285, 315], "factor": 0.55}
+      ],
+      "clear_water_directions": [225, 255, 285, 315],
+      "dirty_water_directions": [45, 75, 105, 135, 180],
+      "special_factors": [
+        "Østenvind og havneuro kan hurtigt give mælket vand.",
+        "Molefoden er robust, men nærliggende sand og havnesediment trækker ned.",
+        "Kræver ofte mere ro end åbne stenrev."
+      ]
+    },
+    "notes": "Eksponeret mod østlige vinde. Hold øje med havneaktivitet og lokal strøm."
+  },
+  {
+    "id": "grenaa-sydstrand-polderrev",
+    "name": "Grenå Sydstrand ved Polderrev",
+    "area": "Grenå Strand",
+    "latitude": 56.382,
+    "longitude": 10.916,
+    "bad_wind_directions": [45, 75, 105, 135],
+    "good_wind_directions": [225, 255, 285, 315],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 4.0,
+    "bottom_stability_bonus": 2.0,
+    "sensitivity": {"wind": 1.0, "waves": 1.05, "rain": 0.9, "current": 0.8},
+    "visibility_model": {
+      "base_score": 76,
+      "spot_type": "Lav østvendt strand med revpartier",
+      "bottom_type": "Sand med sten/rev",
+      "depth_profile": "Lavere partier påvirkes hurtigt af bølger",
+      "sediment_risk": 1.05,
+      "shallow_factor": 1.15,
+      "runoff_sensitivity": 0.85,
+      "algae_sensitivity": 0.95,
+      "current_sensitivity": 0.8,
+      "water_exchange": 0.95,
+      "required_calm_hours": 40,
+      "calm_wind_ms": 4.5,
+      "calm_wave_m": 0.32,
+      "baseline_visibility_m": {"winter": 4.8, "spring": 4.0, "summer": 2.6, "autumn": 3.4},
+      "fetch_sectors": [
+        {"label": "Østlige vinde rammer lavt vand", "directions": [45, 75, 105, 135], "factor": 1.4},
+        {"label": "Vestlige vinde giver roligere kystnær zone", "directions": [225, 255, 285, 315], "factor": 0.5}
+      ],
+      "clear_water_directions": [225, 255, 285, 315],
+      "dirty_water_directions": [45, 75, 105, 135],
+      "special_factors": [
+        "Lavt sand trækker scoren ned ved selv moderate bølger.",
+        "Revpartier hjælper lokalt, men hele området kræver ro.",
+        "Regn og strandnært grums vægtes lidt højere end på åbne stenrev."
+      ]
+    },
+    "notes": "Syd for Grenå Strand. Østlige vinde kan give uklart vand på lavere partier."
+  },
+  {
+    "id": "gjerrild-nordstrand",
+    "name": "Gjerrild Nordstrand",
+    "area": "Norddjurs / Kattegat",
+    "latitude": 56.527,
+    "longitude": 10.844,
+    "bad_wind_directions": [315, 345, 0, 30, 60],
+    "good_wind_directions": [135, 165, 195],
+    "direction_tolerance": 60,
+    "typical_visibility_m": 3.5,
+    "bottom_stability_bonus": 1.0,
+    "sensitivity": {"wind": 1.1, "waves": 1.15, "rain": 0.85, "current": 0.85},
+    "visibility_model": {
+      "base_score": 70,
+      "spot_type": "Nordvendt åben strand",
+      "bottom_type": "Sand og blandet strandbund",
+      "depth_profile": "Lav til moderat dybde med lang nordlig fetch",
+      "sediment_risk": 1.15,
+      "shallow_factor": 1.2,
+      "runoff_sensitivity": 0.75,
+      "algae_sensitivity": 0.9,
+      "current_sensitivity": 0.85,
+      "water_exchange": 0.95,
+      "required_calm_hours": 48,
+      "calm_wind_ms": 4.2,
+      "calm_wave_m": 0.3,
+      "baseline_visibility_m": {"winter": 4.2, "spring": 3.5, "summer": 2.3, "autumn": 3.0},
+      "fetch_sectors": [
+        {"label": "Lang nordlig sø", "directions": [315, 345, 0, 30, 60], "factor": 1.5},
+        {"label": "Sydlige vinde giver læ", "directions": [135, 165, 195], "factor": 0.45}
+      ],
+      "clear_water_directions": [135, 165, 195],
+      "dirty_water_directions": [315, 345, 0, 30, 60],
+      "special_factors": [
+        "Nordlige vinde og dønning vægtes tungt.",
+        "Sandbund kræver længere recovery end stenrev.",
+        "Sydlige vinde kan give god læ, men kun efter bølgerne har lagt sig."
+      ]
+    },
+    "notes": "Nordvendt strand, mere følsom for nordlige vinde og langvarig sø."
+  },
+  {
+    "id": "boennerup-havn",
+    "name": "Bønnerup Havn",
+    "area": "Norddjurs / Kattegat",
+    "latitude": 56.529,
+    "longitude": 10.711,
+    "bad_wind_directions": [300, 330, 0, 30, 60],
+    "good_wind_directions": [120, 150, 180, 210],
+    "direction_tolerance": 60,
+    "typical_visibility_m": 3.0,
+    "bottom_stability_bonus": 0.5,
+    "sensitivity": {"wind": 1.15, "waves": 1.2, "rain": 0.9, "current": 0.9},
+    "visibility_model": {
+      "base_score": 66,
+      "spot_type": "Nordkyst-havn",
+      "bottom_type": "Havnebund, sand og molemateriale",
+      "depth_profile": "Lavt havne- og kystområde med trafik og sediment",
+      "sediment_risk": 1.25,
+      "shallow_factor": 1.25,
+      "runoff_sensitivity": 1.05,
+      "algae_sensitivity": 0.95,
+      "current_sensitivity": 0.95,
+      "water_exchange": 0.8,
+      "required_calm_hours": 60,
+      "calm_wind_ms": 4.0,
+      "calm_wave_m": 0.28,
+      "baseline_visibility_m": {"winter": 3.6, "spring": 3.0, "summer": 2.0, "autumn": 2.6},
+      "fetch_sectors": [
+        {"label": "Nordvest-nordøst giver bølger og havneuro", "directions": [300, 330, 0, 30, 60], "factor": 1.55},
+        {"label": "Sydlige vinde giver relativ læ", "directions": [120, 150, 180, 210], "factor": 0.5}
+      ],
+      "clear_water_directions": [120, 150, 180, 210],
+      "dirty_water_directions": [300, 330, 0, 30, 60],
+      "special_factors": [
+        "Havneforhold gør regn, trafik og lokal opslemning vigtigere.",
+        "Kræver typisk lang ro efter nordlige vinde.",
+        "Den lave bund gør små bølger mere skadelige end scoren tidligere viste."
+      ]
+    },
+    "notes": "Nordkyst-spot med havneforhold. Nordlige vinde er typisk mest kritiske."
+  },
+  {
+    "id": "spoettrup-kaas-bredning",
+    "name": "Spøttrup ved Kås Bredning",
+    "area": "Limfjorden",
+    "latitude": 56.646,
+    "longitude": 8.777,
+    "bad_wind_directions": [225, 255, 285, 315],
+    "good_wind_directions": [45, 75, 105, 135],
+    "direction_tolerance": 60,
+    "typical_visibility_m": 2.5,
+    "bottom_stability_bonus": -1.0,
+    "sensitivity": {"wind": 0.95, "waves": 0.75, "rain": 1.35, "current": 0.7},
+    "visibility_model": {
+      "base_score": 52,
+      "spot_type": "Lav fjord/bredning",
+      "bottom_type": "Fint sediment, silt og dynd",
+      "depth_profile": "Lavt, lukket og meget følsomt for resuspension",
+      "sediment_risk": 2.45,
+      "shallow_factor": 1.65,
+      "runoff_sensitivity": 1.75,
+      "algae_sensitivity": 1.35,
+      "current_sensitivity": 0.85,
+      "water_exchange": 0.45,
+      "required_calm_hours": 96,
+      "calm_wind_ms": 3.2,
+      "calm_wave_m": 0.18,
+      "baseline_visibility_m": {"winter": 3.0, "spring": 2.5, "summer": 1.2, "autumn": 1.8},
+      "fetch_sectors": [
+        {"label": "Vestlige vinde presser uro gennem bredningen", "directions": [225, 255, 285, 315], "factor": 1.35},
+        {"label": "Østlige vinde kan give mere læ ved spottet", "directions": [45, 75, 105, 135], "factor": 0.7}
+      ],
+      "clear_water_directions": [45, 75, 105, 135],
+      "dirty_water_directions": [225, 255, 285, 315, 180],
+      "special_factors": [
+        "Limfjorden kræver meget længere stille periode end åbne kyster.",
+        "Mudder og silt betyder at små bølger og strøm kan ødelægge sigten.",
+        "Regn og alger vægtes højt på grund af lav vandudskiftning."
+      ]
+    },
+    "notes": "Fjordspot med kortere bølgefelt, men ofte mere følsomt for regn, bundslam og alger."
+  },
+  {
+    "id": "hanstholm",
+    "name": "Hanstholm",
+    "area": "Nordvestkysten",
+    "latitude": 57.122,
+    "longitude": 8.599,
+    "bad_wind_directions": [240, 270, 300, 330, 0],
+    "good_wind_directions": [90, 120, 150],
+    "direction_tolerance": 60,
+    "typical_visibility_m": 4.0,
+    "bottom_stability_bonus": 2.0,
+    "sensitivity": {"wind": 1.35, "waves": 1.55, "rain": 0.8, "current": 1.1},
+    "visibility_model": {
+      "base_score": 68,
+      "spot_type": "Meget eksponeret Nordsø-kyst",
+      "bottom_type": "Hård bund/sten blandet med sand",
+      "depth_profile": "Eksponeret, ofte påvirket af dønning og kraftig sø",
+      "sediment_risk": 0.9,
+      "shallow_factor": 1.05,
+      "runoff_sensitivity": 0.55,
+      "algae_sensitivity": 0.75,
+      "current_sensitivity": 1.2,
+      "water_exchange": 1.35,
+      "required_calm_hours": 36,
+      "calm_wind_ms": 4.0,
+      "calm_wave_m": 0.35,
+      "baseline_visibility_m": {"winter": 5.0, "spring": 4.0, "summer": 3.0, "autumn": 3.4},
+      "fetch_sectors": [
+        {"label": "Lang vestlig Nordsø-fetch", "directions": [240, 270, 300, 330, 0], "factor": 1.8},
+        {"label": "Fralandsvind fra øst/sydøst", "directions": [90, 120, 150], "factor": 0.45}
+      ],
+      "clear_water_directions": [90, 120, 150],
+      "dirty_water_directions": [240, 270, 300, 330, 0],
+      "special_factors": [
+        "Bølgehøjde og dønning vægtes meget tungt.",
+        "Stærk vandudskiftning kan give hurtig forbedring, men kun når søen falder.",
+        "Vestlige vinde kan gøre spottet uegnet selv uden meget regn."
+      ]
+    },
+    "notes": "Meget eksponeret Nordsø-spot. Bølger og dønning bør vægte tungt."
+  },
+  {
+    "id": "hirtshals",
+    "name": "Hirtshals",
+    "area": "Skagerrak",
+    "latitude": 57.596,
+    "longitude": 9.957,
+    "bad_wind_directions": [270, 300, 330, 0, 30],
+    "good_wind_directions": [90, 120, 150, 180],
+    "direction_tolerance": 60,
+    "typical_visibility_m": 4.0,
+    "bottom_stability_bonus": 1.5,
+    "sensitivity": {"wind": 1.3, "waves": 1.5, "rain": 0.85, "current": 1.15},
+    "visibility_model": {
+      "base_score": 67,
+      "spot_type": "Åbent Skagerrak-spot",
+      "bottom_type": "Sten/sand ved havne- og kystområde",
+      "depth_profile": "Eksponeret for dønning, strøm og havneaktivitet",
+      "sediment_risk": 0.95,
+      "shallow_factor": 1.05,
+      "runoff_sensitivity": 0.75,
+      "algae_sensitivity": 0.8,
+      "current_sensitivity": 1.25,
+      "water_exchange": 1.25,
+      "required_calm_hours": 40,
+      "calm_wind_ms": 4.0,
+      "calm_wave_m": 0.35,
+      "baseline_visibility_m": {"winter": 4.8, "spring": 4.0, "summer": 2.8, "autumn": 3.3},
+      "fetch_sectors": [
+        {"label": "Nordvestlig sø fra Skagerrak", "directions": [270, 300, 330, 0, 30], "factor": 1.75},
+        {"label": "Øst-sydøst giver mere læ", "directions": [90, 120, 150, 180], "factor": 0.5}
+      ],
+      "clear_water_directions": [90, 120, 150, 180],
+      "dirty_water_directions": [270, 300, 330, 0, 30],
+      "special_factors": [
+        "Dønning og strøm er centrale, ikke kun vindretning.",
+        "Havne- og færgeaktivitet kan give lokal uklarhed.",
+        "Kræver lav bølgehøjde før høj score er troværdig."
+      ]
+    },
+    "notes": "Åbent mod Skagerrak. Vurder dønning, strøm og havneaktivitet ekstra kritisk."
+  },
+  {
+    "id": "frederikshavn",
+    "name": "Frederikshavn",
+    "area": "Nordjylland / Kattegat",
+    "latitude": 57.438,
+    "longitude": 10.543,
+    "bad_wind_directions": [45, 75, 105, 135],
+    "good_wind_directions": [225, 255, 285, 315],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 3.5,
+    "bottom_stability_bonus": 1.0,
+    "sensitivity": {"wind": 1.0, "waves": 1.0, "rain": 0.9, "current": 0.95},
+    "visibility_model": {
+      "base_score": 72,
+      "spot_type": "Østkyst-spot ved Kattegat",
+      "bottom_type": "Sand og sten med havnepåvirkning i området",
+      "depth_profile": "Kystnært og moderat følsomt for østlig sø",
+      "sediment_risk": 0.9,
+      "shallow_factor": 1.0,
+      "runoff_sensitivity": 0.8,
+      "algae_sensitivity": 0.9,
+      "current_sensitivity": 0.95,
+      "water_exchange": 1.0,
+      "required_calm_hours": 36,
+      "calm_wind_ms": 4.6,
+      "calm_wave_m": 0.35,
+      "baseline_visibility_m": {"winter": 4.2, "spring": 3.5, "summer": 2.4, "autumn": 3.0},
+      "fetch_sectors": [
+        {"label": "Østlig Kattegat-sø", "directions": [45, 75, 105, 135], "factor": 1.3},
+        {"label": "Vestlig læ", "directions": [225, 255, 285, 315], "factor": 0.55}
+      ],
+      "clear_water_directions": [225, 255, 285, 315],
+      "dirty_water_directions": [45, 75, 105, 135],
+      "special_factors": [
+        "Østlige vinde og havnepåvirkning kan hurtigt trække ned.",
+        "Vestlige vinde hjælper, men recovery afhænger af om bølgerne er faldet.",
+        "Sommeralger giver lavere basis-sigt."
+      ]
+    },
+    "notes": "Østkyst-spot. Typisk bedst ved vestlige vinde og rolig sø."
+  },
+  {
+    "id": "hoefde-72-agger",
+    "name": "Høfde 72 ved Agger",
+    "area": "Agger / Vestkysten",
+    "latitude": 56.754,
+    "longitude": 8.235,
+    "bad_wind_directions": [210, 240, 270, 300, 330],
+    "good_wind_directions": [60, 90, 120, 150],
+    "direction_tolerance": 60,
+    "typical_visibility_m": 3.0,
+    "bottom_stability_bonus": 0.5,
+    "sensitivity": {"wind": 1.45, "waves": 1.65, "rain": 0.8, "current": 1.1},
+    "visibility_model": {
+      "base_score": 58,
+      "spot_type": "Meget eksponeret vestkyst",
+      "bottom_type": "Sand, høfder og mobil kystbund",
+      "depth_profile": "Lav eksponeret surfzone med kraftig bølgeenergi",
+      "sediment_risk": 1.45,
+      "shallow_factor": 1.45,
+      "runoff_sensitivity": 0.55,
+      "algae_sensitivity": 0.7,
+      "current_sensitivity": 1.25,
+      "water_exchange": 1.2,
+      "required_calm_hours": 60,
+      "calm_wind_ms": 3.8,
+      "calm_wave_m": 0.25,
+      "baseline_visibility_m": {"winter": 3.8, "spring": 3.0, "summer": 2.2, "autumn": 2.6},
+      "fetch_sectors": [
+        {"label": "Vestlig Nordsø-fetch og surf", "directions": [210, 240, 270, 300, 330], "factor": 2.0},
+        {"label": "Fralandsvind fra øst", "directions": [60, 90, 120, 150], "factor": 0.45}
+      ],
+      "clear_water_directions": [60, 90, 120, 150],
+      "dirty_water_directions": [210, 240, 270, 300, 330],
+      "special_factors": [
+        "Bølger over vestkystens sandbund vægtes ekstremt hårdt.",
+        "Kræver lav sø og lang ro; fralandsvind alene er ikke nok.",
+        "Strøm og sikkerhed bør vurderes ekstra konservativt."
+      ]
+    },
+    "notes": "Meget eksponeret vestkyst. Kun relevant ved lav sø, svag fralandsvind og god sikkerhedsmargin."
+  },
+  {
+    "id": "aarhus-sydmole",
+    "name": "Aarhus Sydmole",
+    "area": "Aarhusbugten",
+    "latitude": 56.153,
+    "longitude": 10.235,
+    "bad_wind_directions": [45, 75, 105, 135],
+    "good_wind_directions": [225, 255, 285, 315],
+    "direction_tolerance": 55,
+    "typical_visibility_m": 3.5,
+    "bottom_stability_bonus": 1.0,
+    "sensitivity": {"wind": 1.0, "waves": 0.9, "rain": 1.0, "current": 0.8},
+    "visibility_model": {
+      "base_score": 70,
+      "spot_type": "Bugt- og havnemole",
+      "bottom_type": "Molefod, sand og havnesediment",
+      "depth_profile": "Aarhusbugten giver kortere fetch end åben kyst, men havnepåvirkning",
+      "sediment_risk": 0.95,
+      "shallow_factor": 0.95,
+      "runoff_sensitivity": 1.15,
+      "algae_sensitivity": 1.05,
+      "current_sensitivity": 0.85,
+      "water_exchange": 0.8,
+      "required_calm_hours": 48,
+      "calm_wind_ms": 4.4,
+      "calm_wave_m": 0.32,
+      "baseline_visibility_m": {"winter": 4.0, "spring": 3.3, "summer": 2.1, "autumn": 2.8},
+      "fetch_sectors": [
+        {"label": "Østlige vinde ind i bugten", "directions": [45, 75, 105, 135], "factor": 1.15},
+        {"label": "Vestlige vinde giver læ ved molen", "directions": [225, 255, 285, 315], "factor": 0.55}
+      ],
+      "clear_water_directions": [225, 255, 285, 315],
+      "dirty_water_directions": [45, 75, 105, 135, 180],
+      "special_factors": [
+        "Havneaktivitet og bynær runoff vægtes højere end på åbne kyster.",
+        "Bugten kan holde på alger og uklart vand længere.",
+        "Lavere bølger end vestkysten, men sediment og udløb gør modellen konservativ."
+      ]
+    },
+    "notes": "Havnespot i Aarhusbugten. Østlige vinde og havneaktivitet kan være kritisk for sigt og sikkerhed."
+  }
+]

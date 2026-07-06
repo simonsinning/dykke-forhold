@@ -1,0 +1,15 @@
+{
+  "source": "OpenStreetMap raster tiles",
+  "attribution": "\u00a9 OpenStreetMap contributors",
+  "zoom": 8,
+  "bounds": {
+    "lat_min": 54.25,
+    "lon_min": 5.2,
+    "lat_max": 58.05,
+    "lon_max": 14.3
+  },
+  "size": [
+    1400,
+    1050
+  ]
+}
