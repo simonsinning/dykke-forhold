@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timedelta
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 from .models import ForecastBundle, HourlyPoint
 from .utils import parse_time
@@ -99,7 +99,14 @@ class OpenMeteoProvider:
 
     def _fetch_json(self, base_url: str, params: dict[str, object]) -> dict:
         url = f"{base_url}?{urlencode(params)}"
-        with urlopen(url, timeout=12) as response:
+        request = Request(
+            url,
+            headers={
+                "Accept": "application/json",
+                "User-Agent": "dykke-forhold/1.0 (+https://render.com)",
+            },
+        )
+        with urlopen(request, timeout=12) as response:
             if response.status >= 400:
                 raise HTTPError(url, response.status, response.reason, response.headers, None)
             return json.loads(response.read().decode("utf-8"))
