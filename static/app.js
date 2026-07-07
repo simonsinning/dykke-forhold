@@ -71,7 +71,7 @@ async function loadScore() {
   currentSpot = spotSelect.value;
   setLoading();
   const data = await getJson(`/api/score?spot=${encodeURIComponent(currentSpot)}`);
-  renderScore(data);
+  await renderScore(data);
 }
 
 async function refreshAll() {
@@ -111,7 +111,7 @@ function setLoading() {
   observationsEl.innerHTML = "";
 }
 
-function renderScore(data) {
+async function renderScore(data) {
   const best = data.score.best;
   currentSpotData = data.spot;
   bestGrade.textContent = best.grade;
@@ -123,6 +123,19 @@ function renderScore(data) {
 
   ratingsEl.innerHTML = data.score.ratings.map(renderRating).join("");
   currentSeries = normalizeSeries(data.series);
+  if (!hasWeatherData(currentSeries)) {
+    const weather = await fetchBrowserWeather(data.spot);
+    if (weather.length) {
+      currentSeries = mergeWeatherSeries(currentSeries, weather);
+      warningsEl.textContent = [warningsEl.textContent, "Vinddata er hentet direkte i browseren."]
+        .filter(Boolean)
+        .join(" ");
+    } else {
+      warningsEl.textContent = [warningsEl.textContent, "Kunne ikke hente vinddata fra vejr-API'et."]
+        .filter(Boolean)
+        .join(" ");
+    }
+  }
   renderWindCompass(currentSeries, data.spot);
   renderCharts(currentSeries);
   reasonsEl.innerHTML = best.reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join("");
@@ -440,6 +453,78 @@ function normalizeSeries(series = []) {
     .filter((row) => Number.isFinite(row.ts));
 }
 
+function hasWeatherData(series = []) {
+  return series.some((row) => isFiniteNumber(row.wind_speed) && isFiniteNumber(row.wind_direction));
+}
+
+async function fetchBrowserWeather(spot) {
+  if (!spot) return [];
+
+  const params = new URLSearchParams({
+    latitude: spot.latitude,
+    longitude: spot.longitude,
+    hourly: "wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation",
+    past_days: "3",
+    forecast_days: "3",
+    timezone: "Europe/Copenhagen",
+    wind_speed_unit: "ms",
+  });
+  const urls = [
+    `https://api.open-meteo.com/v1/forecast?${params}`,
+    `https://api.open-meteo.com/v1/dmi?${params}`,
+  ];
+
+  for (const url of urls) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) continue;
+      const data = await response.json();
+      const rows = weatherRowsFromHourly(data.hourly);
+      if (hasWeatherData(rows)) return rows;
+    } catch (error) {
+      // Try the next weather endpoint.
+    }
+  }
+
+  return [];
+}
+
+function weatherRowsFromHourly(hourly = {}) {
+  return (hourly.time || []).map((time, index) => ({
+    time,
+    ts: new Date(time).getTime(),
+    wind_speed: numberOrNull(hourly.wind_speed_10m?.[index]),
+    wind_direction: numberOrNull(hourly.wind_direction_10m?.[index]),
+    wind_gusts: numberOrNull(hourly.wind_gusts_10m?.[index]),
+    precipitation: numberOrNull(hourly.precipitation?.[index]),
+  })).filter((row) => Number.isFinite(row.ts));
+}
+
+function mergeWeatherSeries(series, weatherRows) {
+  const weatherByTime = new Map(weatherRows.map((row) => [row.time, row]));
+  return series.map((row) => {
+    const key = row.time?.slice(0, 16);
+    const weather = weatherByTime.get(key);
+    if (!weather) return row;
+    return {
+      ...row,
+      wind_speed: row.wind_speed ?? weather.wind_speed,
+      wind_direction: row.wind_direction ?? weather.wind_direction,
+      wind_gusts: row.wind_gusts ?? weather.wind_gusts,
+      precipitation: row.precipitation ?? weather.precipitation,
+    };
+  });
+}
+
+function numberOrNull(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
 function renderWindCompass(series, spot) {
   if (!series.length) {
     windCompassEl.innerHTML = `<p class="muted">Ingen vinddata til kompasvisning.</p>`;
@@ -570,11 +655,31 @@ function updateWindCompass(index) {
   const row = currentSeries[index];
   if (!row) return;
 
-  const windSpeed = Number(row.wind_speed ?? 0);
-  const windGusts = Number(row.wind_gusts ?? 0);
-  const windFrom = Number(row.wind_direction ?? 0);
+  const scene = document.querySelector("#compassScene");
+  const arrow = document.querySelector("#windArrow");
+  const rainLayer = document.querySelector("#rainLayer");
+
+  if (!isFiniteNumber(row.wind_speed) || !isFiniteNumber(row.wind_direction)) {
+    document.querySelector("#windCompassTime").textContent = formatLongDate(row.ts);
+    document.querySelector("#windCompassSpeed").textContent = "--";
+    document.querySelector("#windCompassDirection").textContent = "Ingen vinddata for tidspunktet";
+    document.querySelector("#windCompassRain").textContent = isFiniteNumber(row.precipitation)
+      ? `Regn ${row.precipitation.toFixed(1)} mm/t`
+      : "--";
+    scene.style.setProperty("--wind-color", "#8a9a96");
+    scene.style.setProperty("--rain-opacity", "0");
+    scene.style.setProperty("--gust-ring", "0");
+    arrow.setAttribute("title", "Ingen vinddata");
+    arrow.style.transform = "rotate(180deg) scale(0.48)";
+    rainLayer.classList.remove("isRaining");
+    return;
+  }
+
+  const windSpeed = row.wind_speed;
+  const windGusts = numberOrNull(row.wind_gusts) ?? 0;
+  const windFrom = row.wind_direction;
   const windTo = (windFrom + 180) % 360;
-  const rain = Number(row.precipitation ?? 0);
+  const rain = numberOrNull(row.precipitation) ?? 0;
   const color = windColor(windSpeed);
   const rainOpacity = Math.min(0.75, rain / 4);
   const arrowScale = 0.48 + Math.min(1.0, windSpeed / 11) * 0.62;
@@ -585,9 +690,6 @@ function updateWindCompass(index) {
   document.querySelector("#windCompassDirection").textContent = `Fra ${compassName(windFrom)} (${Math.round(windFrom)}°), blæser mod ${compassName(windTo)} · ${windRelation(windFrom)}`;
   document.querySelector("#windCompassRain").textContent = rain > 0 ? `Regn ${rain.toFixed(1)} mm/t` : "Ingen regn";
 
-  const scene = document.querySelector("#compassScene");
-  const arrow = document.querySelector("#windArrow");
-  const rainLayer = document.querySelector("#rainLayer");
   scene.style.setProperty("--wind-color", color);
   scene.style.setProperty("--rain-opacity", rainOpacity);
   scene.style.setProperty("--gust-ring", Math.min(1, windGusts / 18));
